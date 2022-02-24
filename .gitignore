@@ -1,0 +1,21 @@
+# Java bytecodes
+*.class
+
+# Java archives
+*.jar
+
+# Gradle
+.gradle/
+!gradle-wrapper.jar
+
+# Build output directory
+build/
+
+# Intellij IDEA
+.idea/
+*.iml
+*.ipr
+*.iws
+
+# macOS
+.DS_Store
