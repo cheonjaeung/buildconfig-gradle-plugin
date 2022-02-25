@@ -16,8 +16,18 @@
 
 package io.woong.buildconfig
 
-abstract class BuildConfigExtension {
-    abstract fun packageName(name: String)
+class BuildConfigExtensionImpl : BuildConfigExtension() {
+    var packageName: String = ""
+        private set
 
-    abstract fun className(name: String)
+    var className: String = ""
+        private set
+
+    override fun packageName(name: String) {
+        this.packageName = name
+    }
+
+    override fun className(name: String) {
+        this.className = name
+    }
 }
