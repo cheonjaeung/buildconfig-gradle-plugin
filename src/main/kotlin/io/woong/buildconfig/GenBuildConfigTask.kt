@@ -18,6 +18,7 @@ package io.woong.buildconfig
 
 import com.squareup.javapoet.FieldSpec
 import com.squareup.javapoet.JavaFile
+import com.squareup.javapoet.MethodSpec
 import com.squareup.javapoet.TypeName
 import com.squareup.javapoet.TypeSpec
 import org.gradle.api.DefaultTask
@@ -45,9 +46,15 @@ abstract class GenBuildConfigTask : DefaultTask() {
             .initializer("true")
             .build()
 
+        val privateConstructorSpec = MethodSpec
+            .constructorBuilder()
+            .addModifiers(Modifier.PRIVATE)
+            .build()
+
         val classSpec = TypeSpec
             .classBuilder(className)
             .addModifiers(Modifier.PUBLIC, Modifier.FINAL)
+            .addMethod(privateConstructorSpec)
             .addField(fieldSpec)
             .build()
 
