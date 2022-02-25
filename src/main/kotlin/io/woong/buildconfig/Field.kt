@@ -16,26 +16,8 @@
 
 package io.woong.buildconfig
 
-abstract class BuildConfigExtension {
-    abstract fun packageName(name: String)
-
-    abstract fun className(name: String)
-
-    abstract fun field(name: String, value: Boolean)
-
-    abstract fun field(name: String, value: Byte)
-
-    abstract fun field(name: String, value: Short)
-
-    abstract fun field(name: String, value: Int)
-
-    abstract fun field(name: String, value: Long)
-
-    abstract fun field(name: String, value: Float)
-
-    abstract fun field(name: String, value: Double)
-
-    abstract fun field(name: String, value: Char)
-
-    abstract fun field(name: String, value: String)
-}
+data class Field(
+    val type: FieldType,
+    val name: String,
+    val value: String
+) : java.io.Serializable

@@ -23,11 +23,49 @@ class BuildConfigExtensionImpl : BuildConfigExtension() {
     var className: String = ""
         private set
 
+    val fields: MutableList<Field> = mutableListOf()
+
     override fun packageName(name: String) {
         this.packageName = name
     }
 
     override fun className(name: String) {
         this.className = name
+    }
+
+    override fun field(name: String, value: Boolean) {
+        fields.add(Field(FieldType.BOOLEAN, name, value.toString()))
+    }
+
+    override fun field(name: String, value: Byte) {
+        fields.add(Field(FieldType.BYTE, name, value.toString()))
+    }
+
+    override fun field(name: String, value: Short) {
+        fields.add(Field(FieldType.SHORT, name, value.toString()))
+    }
+
+    override fun field(name: String, value: Int) {
+        fields.add(Field(FieldType.INT, name, value.toString()))
+    }
+
+    override fun field(name: String, value: Long) {
+        fields.add(Field(FieldType.LONG, name, "${value}L"))
+    }
+
+    override fun field(name: String, value: Float) {
+        fields.add(Field(FieldType.FLOAT, name, "${value}f"))
+    }
+
+    override fun field(name: String, value: Double) {
+        fields.add(Field(FieldType.DOUBLE, name, value.toString()))
+    }
+
+    override fun field(name: String, value: Char) {
+        fields.add(Field(FieldType.CHAR, name, "\'$value\'"))
+    }
+
+    override fun field(name: String, value: String) {
+        fields.add(Field(FieldType.STRING, name, "\"$value\""))
     }
 }

@@ -32,8 +32,8 @@ class BuildConfigPlugin : Plugin<Project> {
 
         project.afterEvaluate { p ->
             val pluginType = when {
-                p.plugins.hasPlugin(PluginType.JAVA.pluginId) -> PluginType.JAVA
                 p.plugins.hasPlugin(PluginType.KOTLIN.pluginId) -> PluginType.KOTLIN
+                p.plugins.hasPlugin(PluginType.JAVA.pluginId) -> PluginType.JAVA
                 else -> throw IllegalStateException(
                     "'io.woong.buildconfig' plugin requires '${PluginType.JAVA.pluginId}' " +
                             "or '${PluginType.KOTLIN.pluginId}' plugin."
@@ -56,6 +56,7 @@ class BuildConfigPlugin : Plugin<Project> {
         val task = this.tasks.register(TASK_NAME, GenBuildConfigTask::class.java) { t ->
             t.packageName = extension.packageName.ifBlank { this.group.toString() }
             t.className = extension.className.ifBlank { DEFAULT_CLASS_NAME }
+            t.fields = extension.fields
             t.outputDir = File("${project.buildDir}/generated/source/buildconfig/java/main")
         }
         return task
