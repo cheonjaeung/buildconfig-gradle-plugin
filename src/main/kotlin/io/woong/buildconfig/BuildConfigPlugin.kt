@@ -18,11 +18,12 @@ package io.woong.buildconfig
 
 import org.gradle.api.Plugin
 import org.gradle.api.Project
+import org.gradle.api.plugins.JavaLibraryPlugin
+import org.gradle.api.plugins.JavaPlugin
 import org.gradle.api.plugins.JavaPluginExtension
 import org.gradle.api.tasks.TaskProvider
 import org.gradle.api.tasks.compile.JavaCompile
 import org.jetbrains.kotlin.gradle.dsl.KotlinCompile
-import org.jetbrains.kotlin.gradle.dsl.KotlinJvmProjectExtension
 import java.io.File
 
 @Suppress("unused") // Suppress warning because it will be called by gradle.
@@ -31,18 +32,9 @@ class BuildConfigPlugin : Plugin<Project> {
         val buildConfigExtension = project.addExtension()
 
         project.afterEvaluate { p ->
-            val pluginType = when {
-                p.plugins.hasPlugin(PluginType.KOTLIN.pluginId) -> PluginType.KOTLIN
-                p.plugins.hasPlugin(PluginType.JAVA.pluginId) -> PluginType.JAVA
-                else -> throw IllegalStateException(
-                    "'io.woong.buildconfig' plugin requires '${PluginType.JAVA.pluginId}' " +
-                            "or '${PluginType.KOTLIN.pluginId}' plugin."
-                )
-            }
-
             val genBuildConfigTask = p.registerAndConfigureTask(buildConfigExtension)
-            p.configureSourceSets(pluginType)
-            p.configureTaskDependency(pluginType, genBuildConfigTask)
+            p.configureTaskDependency(genBuildConfigTask)
+            p.configureSourceSets()
         }
     }
 
@@ -53,52 +45,41 @@ class BuildConfigPlugin : Plugin<Project> {
     }
 
     private fun Project.registerAndConfigureTask(extension: BuildConfigExtensionImpl): TaskProvider<GenBuildConfigTask> {
-        val task = this.tasks.register(TASK_NAME, GenBuildConfigTask::class.java) { t ->
+        return this.tasks.register(TASK_NAME, GenBuildConfigTask::class.java) { t ->
             t.packageName = extension.packageName.ifBlank { this.group.toString() }
             t.className = extension.className.ifBlank { DEFAULT_CLASS_NAME }
             t.fields = extension.fields
             t.outputDir = File("${project.buildDir}/generated/source/buildconfig/java/main")
         }
-        return task
     }
 
-    private fun Project.configureSourceSets(pluginType: PluginType) {
+    private fun Project.configureSourceSets() {
         val buildDir = this.buildDir.toString()
 
-        when (pluginType) {
-            PluginType.JAVA -> {
-                val ext = this.extensions.findByType(JavaPluginExtension::class.java)
-                    ?: throw IllegalStateException("Cannot found java plugin extension.")
+        val ext = this.extensions.findByType(JavaPluginExtension::class.java)
+            ?: throw IllegalStateException("Cannot found java plugin extension.")
 
-                ext.sourceSets.configureEach { sourceSet ->
-                    sourceSet.java.srcDir("$buildDir/generated/source/buildconfig/java/main")
-                }
-            }
-            PluginType.KOTLIN -> {
-                val ext = this.extensions.findByType(KotlinJvmProjectExtension::class.java)
-                    ?: throw IllegalStateException("Cannot found kotlin plugin extension.")
-
-                ext.sourceSets.configureEach { sourceSet ->
-                    sourceSet.kotlin.srcDir("$buildDir/generated/source/buildconfig/kotlin/main")
-                }
-            }
+        ext.sourceSets.configureEach { sourceSet ->
+            sourceSet.java.srcDir("$buildDir/generated/source/buildconfig/java/main")
         }
     }
 
-    private fun Project.configureTaskDependency(pluginType: PluginType, task: TaskProvider<GenBuildConfigTask>) {
-        val compileTaskType = when (pluginType) {
-            PluginType.JAVA -> JavaCompile::class.java
-            PluginType.KOTLIN -> KotlinCompile::class.java
+    private fun Project.configureTaskDependency(task: TaskProvider<GenBuildConfigTask>) {
+        when {
+            this.plugins.hasPlugin("org.jetbrains.kotlin.jvm") -> {
+                this.tasks
+                    .withType(KotlinCompile::class.java)
+                    .configureEach { it.dependsOn(task) }
+            }
+            this.plugins.hasPlugin(JavaPlugin::class.java) || this.plugins.hasPlugin(JavaLibraryPlugin::class.java) -> {
+                this.tasks
+                    .withType(JavaCompile::class.java)
+                    .configureEach { it.dependsOn(task) }
+            }
+            else -> throw IllegalStateException("""
+                'io.woong.buildconfig' plugin requires 'java', 'java-library' or 'org.jetbrains.kotlin.jvm' plugin.
+            """.trimIndent())
         }
-
-        this.tasks
-            .withType(compileTaskType)
-            .configureEach { it.dependsOn(task) }
-    }
-
-    private enum class PluginType(val pluginId: String) {
-        JAVA("java"),
-        KOTLIN("org.jetbrains.kotlin.jvm")
     }
 
     companion object {
