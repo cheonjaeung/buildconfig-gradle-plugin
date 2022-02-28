@@ -17,21 +17,7 @@
 package io.woong.buildconfig
 
 class BuildConfigExtensionImpl : BuildConfigExtension() {
-    var packageName: String = ""
-        private set
-
-    var className: String = ""
-        private set
-
     val fields: MutableList<Field> = mutableListOf()
-
-    override fun packageName(name: String) {
-        this.packageName = name
-    }
-
-    override fun className(name: String) {
-        this.className = name
-    }
 
     override fun field(name: String, value: Boolean) {
         fields.add(Field(FieldType.BOOLEAN, name, value.toString()))

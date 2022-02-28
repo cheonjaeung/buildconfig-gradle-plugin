@@ -17,9 +17,9 @@
 package io.woong.buildconfig
 
 abstract class BuildConfigExtension {
-    abstract fun packageName(name: String)
+    var packageName: String = ""
 
-    abstract fun className(name: String)
+    var className: String = ""
 
     abstract fun field(name: String, value: Boolean)
 
