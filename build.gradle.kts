@@ -12,6 +12,8 @@ version = "0.1.0"
 gradlePlugin {
     plugins.create("buildConfig") {
         id = "io.woong.buildconfig"
+        displayName = "Build Config Plugin"
+        description = "Gradle plugin that generates static fields on build time likes Android BuildConfig but for JVM."
         implementationClass = "io.woong.buildconfig.BuildConfigPlugin"
     }
 }
