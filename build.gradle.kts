@@ -7,7 +7,7 @@ plugins {
 }
 
 group = "io.woong.buildconfig"
-version = "0.1.0"
+version = "0.1.1"
 
 gradlePlugin {
     plugins.create("buildConfig") {
