@@ -32,11 +32,6 @@ class PluginTest {
     @BeforeEach
     fun setup() {
         settingsGradleFile = File(testProjectDir, "settings.gradle")
-        buildGradleFile = File(testProjectDir, "build.gradle")
-    }
-
-    @Test
-    fun `test is plugin task generated with java plugin`() {
         settingsGradleFile.writeText(
             """
                 pluginManagement {
@@ -45,10 +40,11 @@ class PluginTest {
                         gradlePluginPortal()
                     }
                 }
-                rootProject.name = "groovy-gradle-test"
+                rootProject.name = "plugin-test"
             """.trimIndent()
         )
 
+        buildGradleFile = File(testProjectDir, "build.gradle")
         buildGradleFile.writeText(
             """
                 plugins {
@@ -69,7 +65,10 @@ class PluginTest {
                 }
             """.trimIndent()
         )
+    }
 
+    @Test
+    fun `test is plugin task generated`() {
         val result = GradleRunner
             .create()
             .withProjectDir(testProjectDir)
@@ -82,39 +81,6 @@ class PluginTest {
 
     @Test
     fun `test is plugin task depends on build task`() {
-        settingsGradleFile.writeText(
-            """
-                pluginManagement {
-                    repositories {
-                        mavenCentral()
-                        gradlePluginPortal()
-                    }
-                }
-                rootProject.name = "groovy-gradle-test"
-            """.trimIndent()
-        )
-
-        buildGradleFile.writeText(
-            """
-                plugins {
-                    id "java"
-                    id "io.woong.buildconfig" version "0.1.1"
-                }
-                
-                group "io.woong.test.groovy"
-                version "1.0.0"
-                
-                repositories {
-                    mavenCentral()
-                }
-                
-                buildConfig {
-                    field("APP_VERSION_CODE", 1)
-                    field("APP_VERSION_NAME", "1.0.0")
-                }
-            """.trimIndent()
-        )
-
         val result = GradleRunner
             .create()
             .withProjectDir(testProjectDir)

@@ -32,11 +32,6 @@ class PluginDependencyTest {
     @BeforeEach
     fun setup() {
         settingsGradleFile = File(testProjectDir, "settings.gradle")
-        buildGradleFile = File(testProjectDir, "build.gradle")
-    }
-
-    @Test
-    fun `test is build config plugin cannot run as standalone`() {
         settingsGradleFile.writeText(
             """
                 pluginManagement {
@@ -45,10 +40,15 @@ class PluginDependencyTest {
                         gradlePluginPortal()
                     }
                 }
-                rootProject.name = "groovy-gradle-test"
+                rootProject.name = "plugin-dependency-test"
             """.trimIndent()
         )
 
+        buildGradleFile = File(testProjectDir, "build.gradle")
+    }
+
+    @Test
+    fun `test is build config plugin cannot run as standalone`() {
         buildGradleFile.writeText(
             """
                 plugins {
@@ -81,18 +81,6 @@ class PluginDependencyTest {
 
     @Test
     fun `test is build config plugin can run with java plugin`() {
-        settingsGradleFile.writeText(
-            """
-                pluginManagement {
-                    repositories {
-                        mavenCentral()
-                        gradlePluginPortal()
-                    }
-                }
-                rootProject.name = "groovy-gradle-test"
-            """.trimIndent()
-        )
-
         buildGradleFile.writeText(
             """
                 plugins {
@@ -126,18 +114,6 @@ class PluginDependencyTest {
 
     @Test
     fun `test is build config plugin can run with java-library plugin`() {
-        settingsGradleFile.writeText(
-            """
-                pluginManagement {
-                    repositories {
-                        mavenCentral()
-                        gradlePluginPortal()
-                    }
-                }
-                rootProject.name = "groovy-gradle-test"
-            """.trimIndent()
-        )
-
         buildGradleFile.writeText(
             """
                 plugins {
@@ -171,18 +147,6 @@ class PluginDependencyTest {
 
     @Test
     fun `test is build config plugin can run with kotlin plugin`() {
-        settingsGradleFile.writeText(
-            """
-                pluginManagement {
-                    repositories {
-                        mavenCentral()
-                        gradlePluginPortal()
-                    }
-                }
-                rootProject.name = "groovy-gradle-test"
-            """.trimIndent()
-        )
-
         buildGradleFile.writeText(
             """
                 plugins {
