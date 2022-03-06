@@ -186,7 +186,7 @@ class PluginDependencyTest {
         buildGradleFile.writeText(
             """
                 plugins {
-                    id "org.jetbrains.kotlin.jvm"
+                    id "org.jetbrains.kotlin.jvm" version "1.6.10"
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
