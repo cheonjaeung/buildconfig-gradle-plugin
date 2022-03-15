@@ -40,7 +40,7 @@ class PluginDependencyTest {
                         gradlePluginPortal()
                     }
                 }
-                rootProject.name = "plugin-dependency-test"
+                rootProject.name = "buildconfig-test"
             """.trimIndent()
         )
 
@@ -55,7 +55,7 @@ class PluginDependencyTest {
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
-                group "io.woong.test.groovy"
+                group "io.woong.buildconfig.test"
                 version "1.0.0"
                 
                 repositories {
@@ -88,7 +88,7 @@ class PluginDependencyTest {
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
-                group "io.woong.test.groovy"
+                group "io.woong.buildconfig.test"
                 version "1.0.0"
                 
                 repositories {
@@ -121,7 +121,7 @@ class PluginDependencyTest {
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
-                group "io.woong.test.groovy"
+                group "io.woong.buildconfig.test"
                 version "1.0.0"
                 
                 repositories {
@@ -154,7 +154,7 @@ class PluginDependencyTest {
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
-                group "io.woong.test.groovy"
+                group "io.woong.buildconfig.test"
                 version "1.0.0"
                 
                 repositories {

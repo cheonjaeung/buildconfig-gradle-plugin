@@ -40,7 +40,7 @@ class PluginTest {
                         gradlePluginPortal()
                     }
                 }
-                rootProject.name = "plugin-test"
+                rootProject.name = "buildconfig-test"
             """.trimIndent()
         )
 
@@ -52,7 +52,7 @@ class PluginTest {
                     id "io.woong.buildconfig" version "0.1.1"
                 }
                 
-                group "io.woong.test.groovy"
+                group "io.woong.buildconfig.test"
                 version "1.0.0"
                 
                 repositories {

@@ -30,7 +30,7 @@ class ClassGeneratingTest {
     private lateinit var buildGradleFile: File
     private lateinit var settingsGradleFile: File
 
-    private val testPackageName: String = "io.woong.test"
+    private val testPackageName: String = "io.woong.buildconfig.test"
 
     @BeforeEach
     fun setup() {
@@ -43,7 +43,7 @@ class ClassGeneratingTest {
                         gradlePluginPortal()
                     }
                 }
-                rootProject.name = "class-creation-test"
+                rootProject.name = "buildconfig-test"
             """.trimIndent()
         )
 
