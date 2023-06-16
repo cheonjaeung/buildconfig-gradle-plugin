@@ -12,14 +12,26 @@ It is very helpful for using build-related data in android source code.
 But, there is no feature in normal JVM project.
 This project's main goal is offering BuildConfig-like features in JVM gradle project.
 
-## Usage
+## Getting Started
 
 ### Setup
 
-This plugin requires Java 8 or above.
+This plugin requires JDK 8 or above.
 
 BuildConfig Gradle Plugin is published on Maven Central.
-To use this plugin, set `mavenCentral` in `repository` scope.
+To use this plugin, set `mavenCentral` repository in `pluginManagement` or `buildscript` block.
+
+**Using `pluginManagement` block:**
+
+```groovy
+pluginManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+```
+
+**Using `buildscript` block:**
 
 ```groovy
 buildscript {
@@ -28,34 +40,34 @@ buildscript {
     }
 
     dependencies {
-        classpath "io.woong.buildconfig:buildconfig-gradle-plugin:0.1.1"
+        classpath "io.woong.buildconfig:buildconfig-gradle-plugin:x.y.z"
     }
 }
 ```
 
-### Apply plugin
+### Applying plugin
 
 Apply plugin to where you want to configure build config.
 This plugin depends on `java` or `org.jetbrains.kotlin.jvm` plugin.
 Before applying this plugin, set `java`, `java-library` or `org.jetbrains.kotlin.jvm` plugin.
 
-**Using `apply` method**
+**Using `apply` method:**
 
 ```groovy
 apply plugin: "java"
 apply plugin: "io.woong.buildconfig"
 ```
 
-**Using plugin DSL**
+**Using plugin DSL:**
 
 ```groovy
 plugins {
     java
-    id "io.woong.buildconfig" version "0.1.1"
+    id "io.woong.buildconfig" version "x.y.z"
 }
 ```
 
-### Configure BuildConfig
+### Setting Static Fields
 
 BuildConfig Gradle Plugin provides an extension named `buildConfig`.
 In `buildConfig` scope, you can define static fields and class configurations.
@@ -69,7 +81,7 @@ buildConfig {
 }
 ```
 
-### Generate Static Fields
+### Generating Static Fields
 
 It offers a gradle task, `genBuildConfig`.
 Run this task to generate static class.
@@ -78,7 +90,7 @@ Run this task to generate static class.
 ./gradlew genBuildConfig
 ```
 
-After executing gradle task, You can access generated class in source code.
+After executing gradle task, You can access generated class in source code like below:
 
 ```java
 public class BuildConfigSample {
@@ -105,6 +117,7 @@ buildConfig {
     field("LONG_FIELD", (long) 21000000000L)
     field("FLOAT_FIELD", 1601.5f)
     field("DOUBLE_FIELD", 12131.0)
+    field("CHAR_FIELD", 'c')
     field("STRING_FIELD", "this is string sample")
 }
 ```
