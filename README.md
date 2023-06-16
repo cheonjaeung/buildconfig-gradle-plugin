@@ -1,48 +1,78 @@
 # BuildConfig Gradle Plugin
 
-_A gradle plugin to generate static fields on build time._
-
 [![ci](https://github.com/cheonjaewoong/buildconfig-gradle-plugin/actions/workflows/ci.yml/badge.svg)](https://github.com/cheonjaewoong/buildconfig-gradle-plugin/actions/workflows/ci.yml)
-![JDK Minimum](https://img.shields.io/badge/jdk-1.8%2B-007396?logo=java&logoColor=ff7800)
-[![Maven Central](https://img.shields.io/maven-central/v/io.woong.buildconfig/buildconfig-gradle-plugin?label=maven%20central&logo=apache-maven&logoColor=red)](https://search.maven.org/artifact/io.woong.buildconfig/buildconfig-gradle-plugin)
+![minimum jdk version](https://img.shields.io/badge/jdk-1.8%2B-007396?logo=java&logoColor=ff7800)
+[![maven central](https://img.shields.io/maven-central/v/io.woong.buildconfig/buildconfig-gradle-plugin?label=maven%20central&logo=apache-maven&logoColor=red)](https://search.maven.org/artifact/io.woong.buildconfig/buildconfig-gradle-plugin)
 
-There is a feature called `BuildConfig` in Android project.
-Android gradle plugin generates `BuildConfig` class that contains some static fields.
-For instance, application id, version and some user custom fields can be defined in `BuildConfig`.
-It is useful to define some build metadata or secret keys (like API key).
+BuildConfig Gradle Plugin is a Gradle plugin for generating static fields from Gradle buildscript.
 
-In Android project, it is simple to use and useful.
-But in simple JVM project, it is not.
-This is why I create this project.
+In Android, there is a feature called `BuildConfig`.
+Android Gradle Plugin generates `BuildConfig` class on build time that contains some static fields likes application id, version name and user defined values.
+It is very helpful for using build-related data in android source code.
+But, there is no feature in normal JVM project.
+This project's main goal is offering BuildConfig-like features in JVM gradle project.
 
-## Usage
+## Getting Started
 
-1. Setup gradle plugin classpath to buildscript in top-level `build.gradle` file.
+### Setup
+
+This plugin requires JDK 8 or above.
+
+BuildConfig Gradle Plugin is published on Maven Central.
+To use this plugin, set `mavenCentral` repository in `pluginManagement` or `buildscript` block.
+
+**Using `pluginManagement` block:**
+
+```groovy
+pluginManagement {
+    repositories {
+        mavenCentral()
+    }
+}
+```
+
+**Using `buildscript` block:**
 
 ```groovy
 buildscript {
     repositories {
         mavenCentral()
     }
-        
+
     dependencies {
-        classpath "io.woong.buildconfig:buildconfig-gradle-plugin:0.1.1"
+        classpath "io.woong.buildconfig:buildconfig-gradle-plugin:x.y.z"
     }
 }
-```    
+```
 
-2. Apply plugin to where you want to configure build config.
+### Applying plugin
+
+Apply plugin to where you want to configure build config.
+This plugin depends on `java` or `org.jetbrains.kotlin.jvm` plugin.
+Before applying this plugin, set `java`, `java-library` or `org.jetbrains.kotlin.jvm` plugin.
+
+**Using `apply` method:**
 
 ```groovy
 apply plugin: "java"
 apply plugin: "io.woong.buildconfig"
 ```
 
-3. Define some static fields using `field()` method in the `buildConfig` block.
+**Using plugin DSL:**
 
 ```groovy
-apply plugin: "io.woong.buildconfig"
-   
+plugins {
+    java
+    id "io.woong.buildconfig" version "x.y.z"
+}
+```
+
+### Setting Static Fields
+
+BuildConfig Gradle Plugin provides an extension named `buildConfig`.
+In `buildConfig` scope, you can define static fields and class configurations.
+
+```groovy
 buildConfig {
     field("APP_NAME", "SampleApp")                    // String field.
     field("VERSION_CODE", 12)                         // Int field.
@@ -51,22 +81,19 @@ buildConfig {
 }
 ```
 
-4. Run `build` or `genBuildConfig` task to generate static fields.
+### Generating Static Fields
 
-```shell
-./gradlew build
-```
-
-or
+It offers a gradle task, `genBuildConfig`.
+Run this task to generate static class.
 
 ```shell
 ./gradlew genBuildConfig
 ```
 
-5. Use generated fields in your code. The `BuildConfig` class will be generated in your project's group package.
+After executing gradle task, You can access generated class in source code like below:
 
 ```java
-public class BuildConfigSample { 
+public class BuildConfigSample {
     public static void main(String[] args) {
         String appName = BuildConfig.APP_NAME;
         int versionCode = BuildConfig.VERSION_CODE;
@@ -77,6 +104,23 @@ public class BuildConfigSample {
 ```
 
 ## Configuration
+
+### `field`
+
+You can set primitives and `String` type fields.
+
+```groovy
+buildConfig {
+    field("BYTE_FIELD", (byte) 12)
+    field("SHORT_FIELD", (short) 400)
+    field("INT_FIELD", 20000)
+    field("LONG_FIELD", (long) 21000000000L)
+    field("FLOAT_FIELD", 1601.5f)
+    field("DOUBLE_FIELD", 12131.0)
+    field("CHAR_FIELD", 'c')
+    field("STRING_FIELD", "this is string sample")
+}
+```
 
 ### `packageName` and `className`
 
@@ -100,7 +144,7 @@ package com.example.app;
 
 import com.example.app.build.BuildMetadata;
 
-public class BuildConfigSample { 
+public class BuildConfigSample {
     public static void main(String[] args) {
         String appName = BuildMetadata.APP_NAME;
         int versionCode = BuildMetadata.VERSION_CODE;
@@ -110,37 +154,10 @@ public class BuildConfigSample {
 }
 ```
 
-### `field`
-
-You can set primitives and `String` type fields.
-
-```groovy
-buildConfig {
-    field("BYTE_FIELD", (byte) 12)
-    field("SHORT_FIELD", (short) 400)
-    field("INT_FIELD", 20000)
-    field("LONG_FIELD", (long) 21000000000L)
-    field("FLOAT_FIELD", 1601.5f)
-    field("DOUBLE_FIELD", 12131.0)
-    field("CHAR_FIELD", "c") // Char type will be generated as String.
-    field("STRING_FIELD", "this is sample")
-}
-```
-
 ## License
 
-```
-Copyright 2022 Jaewoong Cheon
+Copyright 2022 Jaewoong Cheon. All rights reserved.
 
-Licensed under the Apache License, Version 2.0 (the "License");
-you may not use this file except in compliance with the License.
-You may obtain a copy of the License at
+Licensed under the Apache License, Version 2.0
 
-    http://www.apache.org/licenses/LICENSE-2.0
-
-Unless required by applicable law or agreed to in writing, software
-distributed under the License is distributed on an "AS IS" BASIS,
-WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
-See the License for the specific language governing permissions and
-limitations under the License.
-```
+See [license file](./LICENSE.txt) for more detail.

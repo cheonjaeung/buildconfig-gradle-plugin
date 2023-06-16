@@ -26,6 +26,13 @@ dependencies {
     implementation(kotlin("stdlib"))
     implementation(kotlin("gradle-plugin"))
     implementation("com.squareup:javapoet:1.13.0")
+
+    testImplementation("org.junit.jupiter:junit-jupiter-api:5.8.2")
+    testRuntimeOnly("org.junit.jupiter:junit-jupiter-engine:5.8.2")
+}
+
+tasks.withType<Test>().configureEach {
+    useJUnitPlatform()
 }
 
 tasks.withType<KotlinCompile>().configureEach {
