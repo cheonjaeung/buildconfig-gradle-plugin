@@ -48,15 +48,8 @@ buildscript {
 ### Applying plugin
 
 Apply plugin to where you want to configure build config.
-This plugin depends on `java` or `org.jetbrains.kotlin.jvm` plugin.
+This plugin depends on `java` or `kotlin-jvm` plugin.
 Before applying this plugin, set `java`, `java-library` or `org.jetbrains.kotlin.jvm` plugin.
-
-**Using `apply` method:**
-
-```groovy
-apply plugin: "java"
-apply plugin: "io.woong.buildconfig"
-```
 
 **Using plugin DSL:**
 
@@ -65,6 +58,13 @@ plugins {
     java
     id "io.woong.buildconfig" version "x.y.z"
 }
+```
+
+**Using `apply` method:**
+
+```groovy
+apply plugin: "java"
+apply plugin: "io.woong.buildconfig"
 ```
 
 ### Setting Static Fields
@@ -105,9 +105,9 @@ public class BuildConfigSample {
 
 ## Configuration
 
-### `field`
+### Supported Types
 
-You can set primitives and `String` type fields.
+This plugin only supports primitives and string type.
 
 ```groovy
 buildConfig {
@@ -122,9 +122,12 @@ buildConfig {
 }
 ```
 
-### `packageName` and `className`
+### Customizing Package and Class Name
 
-Set `packageName` and `className` property in `buildConfig` block.
+If you want to create static fields in custom package or class, set `packageName`
+and `className` property in `buildConfig` block.
+
+For instance, if you set build config like below:
 
 ```groovy
 buildConfig {
@@ -137,7 +140,7 @@ buildConfig {
 }
 ```
 
-Then, the `BuildMetadata` class will be generated in `com.example.app.build` package.
+The `BuildMetadata` class will be generated in `com.example.app.build` package.
 
 ```java
 package com.example.app;
@@ -156,8 +159,5 @@ public class BuildConfigSample {
 
 ## License
 
-Copyright 2022 Jaewoong Cheon. All rights reserved.
-
-Licensed under the Apache License, Version 2.0
-
+This project is licensed under the Apache License, Version 2.0.
 See [license file](./LICENSE.txt) for more detail.
